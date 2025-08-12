@@ -9,7 +9,7 @@ import {
 } from '@stripe/react-stripe-js';
 import api from '../services/api';
 
-const stripePromise = loadStripe('pk_test_51QfXrlBL4mcdWmSPpUPh874MuKha1WMkPic9OCDOGdkyhdpRQ1xUOylVC6lMPbllCXgjG75kvanlPLT92w506lH600vgK49N8O');
+const stripePromise = loadStripe('pk_test_51QfXrlBL4mcdWmSPpUPh874MuKha1WMkPic9OCDOGdkyhdpRQ1xUOylVC6lMPbllCXgjG75kvanlPLT92w506lH600vgK');
 
 const CheckoutForm = () => {
   const { paymentId } = useParams();
