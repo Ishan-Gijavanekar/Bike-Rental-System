@@ -15,6 +15,7 @@ const BikeDetails = () => {
   const [comment, setComment] = useState('');
   const [reviewMessage, setReviewMessage] = useState('');
   const [reviews, setReviews] = useState([]);
+  const [bookingId, setBookingId] = useState(null);
 
   useEffect(() => {
     const fetchBike = async () => {
@@ -54,15 +55,35 @@ const BikeDetails = () => {
     }
 
     try {
-      const { data } = await api.post('/bookings/new-booking', {
+      const { data: bookingData } = await api.post('/bookings/new-booking', {
         bikeId,
         startTime,
-        endTime
+        endTime,
       });
-      setMessage(data.message);
+
+      setBookingId(bookingData.booking._id);
+      setMessage(bookingData.message);
       setShowReviewModal(true);
     } catch (err) {
       setMessage(err.response?.data?.message || 'Booking failed');
+    }
+  };
+
+  const proceedToPayment = async () => {
+    try {
+      const { data: paymentData } = await api.post('/payment/create-payment', {
+        bookingId,
+      });
+
+      navigate(`/payment/${paymentData.paymentId}`, {
+        state: {
+          clientSecret: paymentData.clientSecret,
+          amount: totalPrice,
+          bikeName: bike.name,
+        },
+      });
+    } catch (err) {
+      setMessage(err.response?.data?.message || 'Payment initiation failed');
     }
   };
 
@@ -76,16 +97,21 @@ const BikeDetails = () => {
       const { data } = await api.post('/reviews/post-review', {
         bikeId,
         rating,
-        comment
+        comment,
       });
       setReviewMessage(data.message);
       setTimeout(() => {
         setShowReviewModal(false);
-        navigate('/my-bookings');
-      }, 1500);
+        proceedToPayment();
+      }, 1000);
     } catch (err) {
       setReviewMessage(err.response?.data?.message || 'Review submission failed');
     }
+  };
+
+  const handleSkipReview = () => {
+    setShowReviewModal(false);
+    proceedToPayment();
   };
 
   if (!bike) {
@@ -115,13 +141,13 @@ const BikeDetails = () => {
                 type="datetime-local"
                 value={startTime}
                 onChange={e => setStartTime(e.target.value)}
-                className="input-field"
+                className="border p-2 rounded w-full"
               />
               <input
                 type="datetime-local"
                 value={endTime}
                 onChange={e => setEndTime(e.target.value)}
-                className="input-field"
+                className="border p-2 rounded w-full"
               />
             </div>
             {totalPrice > 0 && (
@@ -175,13 +201,13 @@ const BikeDetails = () => {
               value={rating}
               onChange={e => setRating(e.target.value)}
               placeholder="Rating (1-5)"
-              className="input-field mb-3"
+              className="border p-2 rounded w-full mb-3"
             />
             <textarea
               value={comment}
               onChange={e => setComment(e.target.value)}
               placeholder="Write your review..."
-              className="input-field mb-3"
+              className="border p-2 rounded w-full mb-3"
               rows={4}
             />
             <div className="flex justify-between">
@@ -192,7 +218,7 @@ const BikeDetails = () => {
                 Submit Review
               </button>
               <button
-                onClick={() => setShowReviewModal(false)}
+                onClick={handleSkipReview}
                 className="bg-gray-400 text-white px-4 py-2 rounded hover:bg-gray-500"
               >
                 Skip

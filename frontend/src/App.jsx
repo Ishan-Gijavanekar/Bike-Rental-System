@@ -13,6 +13,7 @@ import Dashboard from "./components/Dashboard"
 import MyReviews from "./pages/MyReviews"
 import PrivacyPolicy from "./pages/PrivacyPolicy"
 import TermsAndConditions from "./pages/TermsAndCondition"
+import PaymentPage from "./pages/PaymentPage"
 
 function App() {
 
@@ -31,6 +32,7 @@ function App() {
         <Route path="/my-reviews" element={<MyReviews />} />
         <Route path="/privacy-policy" element={<PrivacyPolicy />} />
         <Route path="/terms-and-condition" element={<TermsAndConditions />} />
+        <Route path="//payment/:paymentId" element={<PaymentPage />} />
       </Routes>
       <Footer />
     </BrowserRouter>

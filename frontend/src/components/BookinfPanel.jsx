@@ -20,7 +20,7 @@ const BookingsPanel = () => {
   }, []);
 
   const handleDelete = async () => {
-    await api.delete(`/admin/delete-booking/${confirmDeleteId}`);
+    await api.delete(`/bookings/delete-booking/${confirmDeleteId}`);
     setConfirmDeleteId(null);
     fetchBookings();
   };

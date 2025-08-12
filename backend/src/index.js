@@ -22,12 +22,14 @@ import userRoutes from './routes/user.routes.js';
 import bikeRoutes from './routes/bike.routes.js';
 import bookingRoutes from './routes/booking.routes.js';
 import reviewRoutes from './routes/reviews.routes.js';
+import paymentRoutes from './routes/payment.route.js';
 
 
 app.use("/api/v1/users", userRoutes);
 app.use("/api/v1/bikes/", bikeRoutes);
 app.use("/api/v1/bookings/", bookingRoutes);
 app.use("/api/v1/reviews/", reviewRoutes);
+app.use("/api/v1/payment/", paymentRoutes);
 
 
 app.listen(port, () => {
